@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
 const Modal: React.FC<{
-    isOpen: boolean;
-    onClose: () => void;
-    currentValue: number;
-    onUpdateValue: (value: number) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  currentValue: number;
+  onUpdateValue: (value: number) => void;
 }> = ({ isOpen, onClose, currentValue, onUpdateValue }) => {
   const [newValue, setNewValue] = useState(currentValue);
 
-  const handleChange = (e: { target: { value: string; }; }) => {
+  const handleChange = (e: { target: { value: string } }) => {
     setNewValue(parseFloat(e.target.value));
   };
 

@@ -2,7 +2,7 @@
 import { AuctionItem } from '@/models/auction-item';
 import { Modal } from './modal';
 import { useState } from 'react';
-import axios from 'axios';
+import api from '@/components/api';
 
 const AuctionItemComponent: React.FC<{ item: AuctionItem }> = ({ item }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,16 +17,10 @@ const AuctionItemComponent: React.FC<{ item: AuctionItem }> = ({ item }) => {
 
   const updateValue = (newValue: number) => {
     const deviceId = item.id;
-    axios
-      .patch(
-        `http://localhost:5156/api/bid/${deviceId}`,
-        {
-          price: newValue
-        },
-        {
-          withCredentials: true
-        }
-      )
+    api
+      .patch(`bid/${deviceId}`, {
+        price: newValue
+      })
       .then((data) => {
         console.log('update', data);
       })

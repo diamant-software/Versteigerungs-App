@@ -1,10 +1,10 @@
 'use client';
 import { AuctionListComponent } from '@/components/auction-list';
 import { LoginButton } from '@/components/login-button';
+import { LogoutButton } from '@/components/logout-button';
+import api from '@/components/api';
 import { DeviceGroup } from '@/models/device-group';
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
-import axios from 'axios';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 const RemovableList: React.FC<{ items: { id: string; name: string }[] }> = ({ items }) => {
@@ -41,11 +41,9 @@ const HomePage: React.FC = () => {
   const [filterGroup, setFilterGroup] = useState<string>('');
 
   useEffect(() => {
-    axios
-      .get<DeviceGroup[]>(`http://localhost:5156/api/device-groups`, { withCredentials: true })
-      .then((data) => {
-        setAuctionItems(data.data);
-      });
+    api.get<DeviceGroup[]>(`device-groups`).then((data) => {
+      setAuctionItems(data.data);
+    });
   }, []);
 
   return (
@@ -53,50 +51,48 @@ const HomePage: React.FC = () => {
       <h1 className="mb-4 text-2xl font-semibold">Diamant Verteigerungs Platform</h1>
 
       <AuthenticatedTemplate>
-        <Link className="mb-4 rounded-md" href="/profile">
-          Request Profile Information
-        </Link>
+        <LogoutButton />
+
+        <div className="flex justify-start gap-4 pb-4">
+          {auctionItems?.map((item) => {
+            return (
+              <div
+                key={item.id}
+                onClick={() => {
+                  if (filterGroup === item.name) {
+                    setFilterGroup('');
+                  } else {
+                    setFilterGroup(item.name);
+                  }
+                }}
+                className={
+                  'cursor-pointer transition duration-300 ease-in-out ' +
+                  (filterGroup === item.name ? 'text-indigo-400' : '')
+                }
+              >
+                {item.name}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {auctionItems
+            ?.filter((group) => {
+              if (!filterGroup) {
+                return true;
+              }
+
+              return group.name === filterGroup;
+            })
+            ?.map((item) => <AuctionListComponent key={item.id} items={item.devices} />)}
+        </div>
       </AuthenticatedTemplate>
 
       <UnauthenticatedTemplate>
         <p>Please sign-in to see your profile information.</p>
         <LoginButton />
       </UnauthenticatedTemplate>
-
-      <div className="flex justify-start gap-4 pb-4">
-        {auctionItems?.map((item) => {
-          return (
-            <div
-              key={item.id}
-              onClick={() => {
-                if (filterGroup === item.name) {
-                  setFilterGroup('');
-                } else {
-                  setFilterGroup(item.name);
-                }
-              }}
-              className={
-                'cursor-pointer transition duration-300 ease-in-out ' +
-                (filterGroup === item.name ? 'text-indigo-400' : '')
-              }
-            >
-              {item.name}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {auctionItems
-          ?.filter((group) => {
-            if (!filterGroup) {
-              return true;
-            }
-
-            return group.name === filterGroup;
-          })
-          ?.map((item) => <AuctionListComponent key={item.id} items={item.devices} />)}
-      </div>
     </div>
   );
 };

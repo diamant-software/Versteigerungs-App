@@ -1,7 +1,7 @@
 'use client';
+import api from '@/components/api';
 import { CSVItem } from '@/models/auction-item';
 import { DeviceGroup } from '@/models/device-group';
-import axios from 'axios';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import FileUpload from './components/FileUpload';
@@ -49,8 +49,8 @@ const AdminPage: React.FC = () => {
     });
 
     group.forEach((item) => {
-      axios
-        .post('http://localhost:5156/api/device-groups', item, { withCredentials: true })
+      api
+        .post('device-groups', item)
         .then((data) => {
           console.log('data', data);
         })
