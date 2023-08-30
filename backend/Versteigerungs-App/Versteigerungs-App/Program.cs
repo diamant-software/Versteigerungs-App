@@ -13,7 +13,21 @@ builder.Services.AddSingleton<IMongoDbCollectionFactory, MongoDbCollectionFactor
 builder.Services.AddSingleton<IRepository, MongoRepository>();
 builder.Services.AddSingleton<IBiddingService, BiddingService>();
 builder.Services.AddControllers();
+
+builder.Services.AddCors(p => p.AddPolicy("corsapp", policyBuilder =>
+{
+    policyBuilder
+        .SetIsOriginAllowedToAllowWildcardSubdomains()
+        .WithOrigins("http://localhost:3000","https://*.diamant-software.de/rem*")
+        .AllowAnyMethod()
+        .AllowCredentials()
+        .AllowAnyHeader();
+}));
+
 var app = builder.Build();
+
+
+app.UseCors("corsapp");
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
