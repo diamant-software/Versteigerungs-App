@@ -9,19 +9,27 @@ public interface IBiddingService
 
 public class BiddingService : IBiddingService
 {
-    private readonly IRepository _deviceGroupRepository;
+    private readonly IDevicesRepository _deviceGroupDevicesRepository;
+    private readonly IBiddingRepository _biddingRepository;
+    private readonly ILogger<BiddingService> _logger;
 
-    public BiddingService(IRepository deviceGroupRepository)
+    public BiddingService(IDevicesRepository deviceGroupDevicesRepository, ILogger<BiddingService> logger, IBiddingRepository biddingRepository)
     {
-        _deviceGroupRepository = deviceGroupRepository;
+        _deviceGroupDevicesRepository = deviceGroupDevicesRepository;
+        _logger = logger;
+        _biddingRepository = biddingRepository;
     }
 
     public async Task<bool> PlaceBid(Guid deviceId, Bid bid, User user)
     {
-        // Implement your bidding logic here
         try
         {
-            var deviceGroups = await _deviceGroupRepository.GetAllAsync();
+            if (! await UserCanPlaceBid(user, deviceId))
+            {
+                return false;
+            }
+            
+            var deviceGroups = await _deviceGroupDevicesRepository.GetAllAsync();
             var deviceGroup = deviceGroups.FirstOrDefault(group => group.Devices.Any(device => device.Id == deviceId));
 
             if (deviceGroup == null)
@@ -40,15 +48,24 @@ public class BiddingService : IBiddingService
             groupAltered.Add(device);
             deviceGroup.Devices = groupAltered;
 
-            await _deviceGroupRepository.UpdateAsync(deviceGroup);
+            await _deviceGroupDevicesRepository.UpdateAsync(deviceGroup);
+
+            await _biddingRepository.PlaceBidAsync(user.Username, deviceId, bid.Price);
 
             return true;
 
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Log the exception
+            _logger.LogError(e, "Error while placing bid");
             return false;
         }
+    }
+
+    private async Task<bool> UserCanPlaceBid(User user, Guid deviceId)
+    {
+        var userBids = await _biddingRepository.GetBidsByUserAsync(user.Username);
+        var userBidsForDevice = userBids.Where(bid => bid.DeviceId == deviceId);
+        return userBidsForDevice.All(bid => bid.TimestampUtc.DayOfYear < DateTime.UtcNow.DayOfYear);
     }
 }

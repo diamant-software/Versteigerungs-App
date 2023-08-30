@@ -1,16 +1,10 @@
-﻿using Versteigerungs_App.Models;
+﻿using Microsoft.Extensions.Options;
+using Versteigerungs_App.Models;
+using MongoDB.Driver;
 
 namespace Versteigerungs_App.Services;
 
-using MongoDB.Driver;
-
-
-// IRepository.cs
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-public interface IRepository
+public interface IDevicesRepository
 {
     Task<IEnumerable<DeviceGroup>> GetAllAsync();
     Task<DeviceGroup?> GetByIdAsync(Guid id);
@@ -18,14 +12,15 @@ public interface IRepository
     Task UpdateAsync(DeviceGroup group);
 }
 
-public class MongoRepository : IRepository
+public class MongoDevicesRepository : IDevicesRepository
 {
     private readonly IMongoCollection<DeviceGroup> _collection;
 
-    public MongoRepository(IMongoDbCollectionFactory mongoDbDbCollectionFactory,
-        IDatabaseSettings settings)
+    public MongoDevicesRepository(IMongoDbCollectionFactory<DeviceGroup> mongoDbDbCollectionFactory,
+        IOptionsMonitor<DatabaseSettings> optionsMonitor)
     {
-        _collection =mongoDbDbCollectionFactory.GetCollection(settings);
+        var settings = optionsMonitor.Get("devices");
+        _collection = mongoDbDbCollectionFactory.GetCollection(settings);
     }
 
     public async Task<IEnumerable<DeviceGroup>> GetAllAsync()

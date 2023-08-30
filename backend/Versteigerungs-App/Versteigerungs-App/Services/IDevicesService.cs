@@ -13,16 +13,16 @@ namespace Versteigerungs_App.Services
 
     public class DeviceService : IDeviceService
     {
-        private readonly IRepository _deviceGroupRepository;
+        private readonly IDevicesRepository _deviceGroupDevicesRepository;
 
-        public DeviceService(IRepository deviceGroupRepository)
+        public DeviceService(IDevicesRepository deviceGroupDevicesRepository)
         {
-            _deviceGroupRepository = deviceGroupRepository;
+            _deviceGroupDevicesRepository = deviceGroupDevicesRepository;
         }
 
         public async Task<Device> CreateDevice(Guid groupId, Device device)
         {
-            var group = await _deviceGroupRepository.GetByIdAsync(groupId);
+            var group = await _deviceGroupDevicesRepository.GetByIdAsync(groupId);
             if (group == null)
             {
                 throw new Exception();
@@ -41,7 +41,7 @@ namespace Versteigerungs_App.Services
 
         public async Task<Device> UpdateDevice(Guid groupId, Guid deviceId, Device device)
         {
-            var group = await _deviceGroupRepository.GetByIdAsync(groupId);
+            var group = await _deviceGroupDevicesRepository.GetByIdAsync(groupId);
             if (group == null)
             {
                 throw new Exception();

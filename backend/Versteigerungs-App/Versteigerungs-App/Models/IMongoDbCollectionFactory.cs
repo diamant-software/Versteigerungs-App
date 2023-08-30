@@ -3,15 +3,15 @@
 namespace Versteigerungs_App.Models;
 
 
-public interface IMongoDbCollectionFactory
+public interface IMongoDbCollectionFactory<T>
 {
-    IMongoCollection<DeviceGroup> GetCollection(IDatabaseSettings settings);
+    IMongoCollection<T> GetCollection(IDatabaseSettings settings);
 }
 
-public class MongoDbCollectionFactory : IMongoDbCollectionFactory
+public class MongoDbCollectionFactory<T> : IMongoDbCollectionFactory<T>
 {
-    public IMongoCollection<DeviceGroup> GetCollection(IDatabaseSettings settings) =>
+    public IMongoCollection<T> GetCollection(IDatabaseSettings settings) =>
         new MongoClient(settings.ConnectionString)
             .GetDatabase(settings.DatabaseName)
-            .GetCollection<DeviceGroup>(settings.CollectionName);
+            .GetCollection<T>(settings.CollectionName);
 }

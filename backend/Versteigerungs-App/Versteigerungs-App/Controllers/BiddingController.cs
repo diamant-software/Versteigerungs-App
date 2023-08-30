@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Versteigerungs_App.Models;
 using Versteigerungs_App.Services;
+using Versteigerungs_App.Utils;
 
 namespace Versteigerungs_App.Controllers
 {
     [Route("api/bid")]
     [ApiController]
+    [Authorize]
     public class BiddingController : ControllerBase
     {
         private readonly IBiddingService _biddingService;
@@ -20,7 +23,7 @@ namespace Versteigerungs_App.Controllers
         {
             try
             {
-                var user = new User { Username = "TestUser" };
+                var user = User.GetUser();
                 var success = await _biddingService.PlaceBid(deviceId, bid, user);
                 if (success)
                 {

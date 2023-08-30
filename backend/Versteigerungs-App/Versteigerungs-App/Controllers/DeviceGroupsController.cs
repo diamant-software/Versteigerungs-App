@@ -1,33 +1,37 @@
-﻿// DeviceGroupsController.cs
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Versteigerungs_App.Models;
 using Versteigerungs_App.Services;
+using Versteigerungs_App.Utils;
 
 namespace DeviceAuctionAPI.Controllers;
 
 [Route("api/device-groups")]
 [ApiController]
+[Authorize]
 public class DeviceGroupsController : ControllerBase
 {
-    private readonly IRepository _repository;
+    private readonly IDevicesRepository _devicesRepository;
 
-    public DeviceGroupsController(IRepository repository)
+    public DeviceGroupsController(IDevicesRepository devicesRepository)
     {
-        _repository = repository;
+        _devicesRepository = devicesRepository;
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateDeviceGroup(DeviceGroup deviceGroup)
     {
+        if (!User.GetUser().IsAdmin()) return Forbid();
+        
         deviceGroup.Id = Guid.NewGuid();
-        await _repository.CreateAsync(deviceGroup);
+        await _devicesRepository.CreateAsync(deviceGroup);
         return CreatedAtAction(nameof(GetDeviceGroup), new { id = deviceGroup.Id }, deviceGroup);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDeviceGroup(Guid id)
     {
-        var deviceGroup = await _repository.GetByIdAsync(id);
+        var deviceGroup = await _devicesRepository.GetByIdAsync(id);
         if (deviceGroup == null)
         {
             return NotFound();
@@ -38,7 +42,7 @@ public class DeviceGroupsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllDeviceGroups()
     {
-        var deviceGroups = await _repository.GetAllAsync();
+        var deviceGroups = await _devicesRepository.GetAllAsync();
         return Ok(deviceGroups);
     }
 }

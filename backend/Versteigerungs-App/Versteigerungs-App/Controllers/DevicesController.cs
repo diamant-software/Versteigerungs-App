@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Versteigerungs_App.Models;
 using Versteigerungs_App.Services;
+using Versteigerungs_App.Utils;
 
 namespace Versteigerungs_App.Controllers
 {
     [Route("api/device-groups/{groupId}/devices")]
     [ApiController]
+    [Authorize]
     public class DevicesController : ControllerBase
     {
         private readonly IDeviceService _deviceService;
@@ -18,6 +21,8 @@ namespace Versteigerungs_App.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDevice(Guid groupId, [FromBody] Device device)
         {
+            if (!User.GetUser().IsAdmin()) return Forbid();
+
             try
             {
                 var createdDevice = await _deviceService.CreateDevice(groupId, device);
@@ -40,6 +45,7 @@ namespace Versteigerungs_App.Controllers
         [HttpPatch("{deviceId}")]
         public async Task<IActionResult> UpdateDevice(Guid groupId, Guid deviceId, [FromBody] Device device)
         {
+            if (!User.GetUser().IsAdmin()) return Forbid();
             try
             {
                 var updatedDevice = await _deviceService.UpdateDevice(groupId, deviceId, device);
