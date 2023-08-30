@@ -39,7 +39,6 @@ const HomePage: React.FC = () => {
   const [filterGroup, setFilterGroup] = useState<string>('');
 
   useEffect(() => {
-    const groupId = '';
     axios.get<DeviceGroup[]>(`http://localhost:5156/api/device-groups`).then((data) => {
       setAuctionItems(data.data);
     });
@@ -52,23 +51,22 @@ const HomePage: React.FC = () => {
       <div className="flex justify-start gap-4 pb-4">
         {auctionItems?.map((item) => {
           return (
-            <>
-              <div
-                onClick={() => {
-                  if (filterGroup === item.name) {
-                    setFilterGroup('');
-                  } else {
-                    setFilterGroup(item.name);
-                  }
-                }}
-                className={
-                  'cursor-pointer transition duration-300 ease-in-out ' +
-                  (filterGroup === item.name ? 'text-indigo-400' : '')
+            <div
+              key={item.id}
+              onClick={() => {
+                if (filterGroup === item.name) {
+                  setFilterGroup('');
+                } else {
+                  setFilterGroup(item.name);
                 }
-              >
-                {item.name}
-              </div>
-            </>
+              }}
+              className={
+                'cursor-pointer transition duration-300 ease-in-out ' +
+                (filterGroup === item.name ? 'text-indigo-400' : '')
+              }
+            >
+              {item.name}
+            </div>
           );
         })}
       </div>
