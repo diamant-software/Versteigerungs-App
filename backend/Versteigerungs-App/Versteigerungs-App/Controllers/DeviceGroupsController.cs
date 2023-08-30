@@ -34,4 +34,11 @@ public class DeviceGroupsController : ControllerBase
         }
         return Ok(deviceGroup);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllDeviceGroups()
+    {
+        var deviceGroups = await _repository.GetAllAsync();
+        return Ok(deviceGroups);
+    }
 }
