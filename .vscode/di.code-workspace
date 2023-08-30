@@ -1,0 +1,17 @@
+{
+    "folders": [
+      {
+        "name": "Frontend",
+        "path": "../frontend"
+      },
+      {
+        "name": "ROOT",
+        "path": ".."
+      }
+    ],
+    "settings": {      
+      "jest.disabledWorkspaceFolders": [
+        "ROOT",
+      ],
+    }
+  }
