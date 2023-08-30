@@ -1,7 +1,15 @@
 export interface AuctionItem {
-  id: number;
-  nummer: string;
+  id: string;
+  name: string;
   model: string;
-  seriennummer: string;
-  prices: string;
+  serialNumber: string;
+  price: number;
+}
+
+
+export interface CSVItem {
+  nummer?: string;
+  model?: string;
+  seriennummer?: string;
+  price?: number;
 }

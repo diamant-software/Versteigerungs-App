@@ -1,19 +1,12 @@
 'use client';
 import { AuctionItem, CSVItem } from '@/models/auction-item';
-import React, { useState } from 'react';
-import FileUpload from './components/FileUpload';
-import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-
-interface DeviceGroup {
-  id: string;
-  name: string;
-  devices: AuctionItem[];
-}
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import FileUpload from './components/FileUpload';
+import { DeviceGroup } from '@/models/device-group';
 
 const AdminPage: React.FC = () => {
-  const [auctionItems, setAuctionItems] = useState<DeviceGroup[]>([]);
-
   const handleCSVUpload = (data: CSVItem[]) => {
     const group: DeviceGroup[] = [];
     let groupItem: DeviceGroup | null = null;
@@ -38,9 +31,9 @@ const AdminPage: React.FC = () => {
               : parseFloat((price ?? '')?.replace('€', '').trim() ?? '0');
           groupItem?.devices.push({
             id: uuidv4(),
-            nummer: nummer ?? '',
+            name: nummer ?? '',
             model: model ?? '',
-            seriennummer: seriennummer ?? '',
+            serialNumber: seriennummer ?? '',
             price: parsedPrice
           });
         }
@@ -55,7 +48,7 @@ const AdminPage: React.FC = () => {
       group
     });
 
-    group.forEach(item => {
+    group.forEach((item) => {
       axios
         .post('http://localhost:5156/api/device-groups', item)
         .then((data) => {
@@ -64,7 +57,7 @@ const AdminPage: React.FC = () => {
         .catch((error) => {
           console.error(error);
         });
-    })
+    });
   };
 
   return (
