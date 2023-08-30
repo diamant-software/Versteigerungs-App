@@ -1,0 +1,21 @@
+{
+    "folders": [
+      {
+        "name": "Frontend",
+        "path": "../frontend"
+      },
+      {
+        "name": "Versteigerungs-App",
+        "path": "../backend/Versteigerungs-App"
+      },
+      {
+        "name": "ROOT",
+        "path": ".."
+      }
+    ],
+    "settings": {      
+      "jest.disabledWorkspaceFolders": [
+        "ROOT",
+      ],
+    }
+  }
