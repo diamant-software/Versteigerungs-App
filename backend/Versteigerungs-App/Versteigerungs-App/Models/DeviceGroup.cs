@@ -1,4 +1,5 @@
-﻿namespace VersteigerungsApp.Models;
+﻿namespace Versteigerungs_App.Models;
+
 
 public class DeviceGroup
 {

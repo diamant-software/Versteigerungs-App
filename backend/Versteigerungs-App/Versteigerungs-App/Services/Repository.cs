@@ -1,6 +1,7 @@
-﻿using MongoDB.Driver;
+﻿namespace Versteigerungs_App.Services;
 
-namespace VersteigerungsApp.Services;
+using MongoDB.Driver;
+
 
 // IRepository.cs
 using System;

@@ -1,7 +1,9 @@
 using MongoDB.Driver;
-using VersteigerungsApp.Services;
+using Versteigerungs_App.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
 var mongoSettings = builder.Configuration.GetSection("MongoDBSettings");
 builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(mongoSettings["ConnectionString"]));
 builder.Services.AddScoped<IMongoDatabase>(s =>
@@ -11,8 +13,5 @@ builder.Services.AddScoped<IMongoDatabase>(s =>
 });
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(MongoRepository<>));
-var app = builder.Build();
-
-app.MapGet("/", () => "Hello World!");
 
 app.Run();

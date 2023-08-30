@@ -1,7 +1,7 @@
 ﻿// DeviceGroupsController.cs
 using Microsoft.AspNetCore.Mvc;
-using VersteigerungsApp.Models;
-using VersteigerungsApp.Services;
+using Versteigerungs_App.Models;
+using Versteigerungs_App.Services;
 
 namespace DeviceAuctionAPI.Controllers;
 
