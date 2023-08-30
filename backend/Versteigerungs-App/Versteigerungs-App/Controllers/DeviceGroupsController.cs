@@ -5,13 +5,13 @@ using Versteigerungs_App.Services;
 
 namespace DeviceAuctionAPI.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/device-groups")]
 [ApiController]
 public class DeviceGroupsController : ControllerBase
 {
-    private readonly IRepository<DeviceGroup> _repository;
+    private readonly IRepository _repository;
 
-    public DeviceGroupsController(IRepository<DeviceGroup> repository)
+    public DeviceGroupsController(IRepository repository)
     {
         _repository = repository;
     }

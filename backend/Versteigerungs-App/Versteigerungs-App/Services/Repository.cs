@@ -1,4 +1,6 @@
-﻿namespace Versteigerungs_App.Services;
+﻿using Versteigerungs_App.Models;
+
+namespace Versteigerungs_App.Services;
 
 using MongoDB.Driver;
 
@@ -8,45 +10,36 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public interface IRepository<T>
+public interface IRepository
 {
-    Task<IEnumerable<T>> GetAllAsync();
-    Task<T> GetByIdAsync(Guid id);
-    Task<T> CreateAsync(T entity);
-    // Weitere Methoden je nach Bedarf
+    Task<IEnumerable<DeviceGroup>> GetAllAsync();
+    Task<DeviceGroup> GetByIdAsync(Guid id);
+    Task<DeviceGroup> CreateAsync(DeviceGroup entity);
 }
 
-
-
-public class MongoRepository<T> : IRepository<T>
+public class MongoRepository : IRepository
 {
-    private readonly IMongoCollection<T> _collection;
+    private readonly IMongoCollection<DeviceGroup> _collection;
 
-    public MongoRepository(IMongoDatabase database, string collectionName)
+    public MongoRepository(IMongoDbCollectionFactory mongoDbDbCollectionFactory,
+        IDatabaseSettings settings)
     {
-        _collection = database.GetCollection<T>(collectionName);
+        _collection =mongoDbDbCollectionFactory.GetCollection(settings);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<DeviceGroup>> GetAllAsync()
     {
         return await _collection.Find(_ => true).ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(Guid id)
+    public async Task<DeviceGroup> GetByIdAsync(Guid id)
     {
-        return await _collection.Find(entity => GetId(entity) == id).FirstOrDefaultAsync();
+        return await _collection.Find(entity => entity.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<T> CreateAsync(T entity)
+    public async Task<DeviceGroup> CreateAsync(DeviceGroup entity)
     {
         await _collection.InsertOneAsync(entity);
         return entity;
-    }
-    
-
-    private Guid GetId(T entity)
-    {
-        var property = entity.GetType().GetProperty("Id");
-        return (Guid)property.GetValue(entity);
     }
 }
