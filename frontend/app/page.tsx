@@ -1,8 +1,10 @@
 'use client';
 import { AuctionListComponent } from '@/components/auction-list';
-import { AuctionItem } from '@/models/auction-item';
+import { LoginButton } from '@/components/login-button';
 import { DeviceGroup } from '@/models/device-group';
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
 import axios from 'axios';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 const RemovableList: React.FC<{ items: { id: string; name: string }[] }> = ({ items }) => {
@@ -39,14 +41,27 @@ const HomePage: React.FC = () => {
   const [filterGroup, setFilterGroup] = useState<string>('');
 
   useEffect(() => {
-    axios.get<DeviceGroup[]>(`http://localhost:5156/api/device-groups`).then((data) => {
-      setAuctionItems(data.data);
-    });
+    axios
+      .get<DeviceGroup[]>(`http://localhost:5156/api/device-groups`, { withCredentials: true })
+      .then((data) => {
+        setAuctionItems(data.data);
+      });
   }, []);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="mb-4 text-2xl font-semibold">Diamant Verteigerungs Platform</h1>
+
+      <AuthenticatedTemplate>
+        <Link className="mb-4 rounded-md" href="/profile">
+          Request Profile Information
+        </Link>
+      </AuthenticatedTemplate>
+
+      <UnauthenticatedTemplate>
+        <p>Please sign-in to see your profile information.</p>
+        <LoginButton />
+      </UnauthenticatedTemplate>
 
       <div className="flex justify-start gap-4 pb-4">
         {auctionItems?.map((item) => {

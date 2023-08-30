@@ -18,9 +18,15 @@ const AuctionItemComponent: React.FC<{ item: AuctionItem }> = ({ item }) => {
   const updateValue = (newValue: number) => {
     const deviceId = item.id;
     axios
-      .patch(`http://localhost:5156/api/bid/${deviceId}`, {
-        price: newValue
-      })
+      .patch(
+        `http://localhost:5156/api/bid/${deviceId}`,
+        {
+          price: newValue
+        },
+        {
+          withCredentials: true
+        }
+      )
       .then((data) => {
         console.log('update', data);
       })

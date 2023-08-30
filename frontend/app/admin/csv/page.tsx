@@ -1,10 +1,10 @@
 'use client';
-import { AuctionItem, CSVItem } from '@/models/auction-item';
+import { CSVItem } from '@/models/auction-item';
+import { DeviceGroup } from '@/models/device-group';
 import axios from 'axios';
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import FileUpload from './components/FileUpload';
-import { DeviceGroup } from '@/models/device-group';
 
 const AdminPage: React.FC = () => {
   const handleCSVUpload = (data: CSVItem[]) => {
@@ -50,7 +50,7 @@ const AdminPage: React.FC = () => {
 
     group.forEach((item) => {
       axios
-        .post('http://localhost:5156/api/device-groups', item)
+        .post('http://localhost:5156/api/device-groups', item, { withCredentials: true })
         .then((data) => {
           console.log('data', data);
         })
