@@ -11,6 +11,7 @@ builder.Services.AddSingleton<IMongoDbCollectionFactory, MongoDbCollectionFactor
 
 
 builder.Services.AddSingleton<IRepository, MongoRepository>();
+builder.Services.AddSingleton<IBiddingService, BiddingService>();
 builder.Services.AddControllers();
 var app = builder.Build();
 app.MapControllers();

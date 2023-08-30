@@ -13,8 +13,9 @@ using System.Threading.Tasks;
 public interface IRepository
 {
     Task<IEnumerable<DeviceGroup>> GetAllAsync();
-    Task<DeviceGroup> GetByIdAsync(Guid id);
+    Task<DeviceGroup?> GetByIdAsync(Guid id);
     Task<DeviceGroup> CreateAsync(DeviceGroup entity);
+    Task UpdateAsync(DeviceGroup group);
 }
 
 public class MongoRepository : IRepository
@@ -32,7 +33,7 @@ public class MongoRepository : IRepository
         return await _collection.Find(_ => true).ToListAsync();
     }
 
-    public async Task<DeviceGroup> GetByIdAsync(Guid id)
+    public async Task<DeviceGroup?> GetByIdAsync(Guid id)
     {
         return await _collection.Find(entity => entity.Id == id).FirstOrDefaultAsync();
     }
@@ -41,5 +42,10 @@ public class MongoRepository : IRepository
     {
         await _collection.InsertOneAsync(entity);
         return entity;
+    }
+
+    public async Task UpdateAsync(DeviceGroup group)
+    {
+        await _collection.ReplaceOneAsync(entity => entity.Id == group.Id, group);
     }
 }
