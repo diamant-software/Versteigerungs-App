@@ -15,7 +15,7 @@ namespace Versteigerungs_App.Controllers
             _biddingService = biddingService;
         }
 
-        [HttpPost("{deviceId}")]
+        [HttpPatch("{deviceId}")]
         public async Task<IActionResult> PlaceBid(Guid deviceId, [FromBody] Bid bid)
         {
             try
