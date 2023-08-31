@@ -7,34 +7,6 @@ import { DeviceGroup } from '@/models/device-group';
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
 import React, { useEffect, useState } from 'react';
 
-const RemovableList: React.FC<{ items: { id: string; name: string }[] }> = ({ items }) => {
-  const [itemList, setItemList] = useState(items);
-
-  const handleRemove = (itemId: string) => {
-    const updatedList = itemList.filter((item) => item.id !== itemId);
-    setItemList(updatedList);
-  };
-
-  return (
-    <div className="grid grid-cols-3 gap-4">
-      {itemList.map((item) => (
-        <div
-          key={item.id}
-          className="relative rounded-md border border-gray-300 p-4 transition-all hover:shadow-md"
-        >
-          {item.name}
-          <button
-            onClick={() => handleRemove(item.id)}
-            className="absolute right-1 top-1 rounded-full bg-red-500 px-2 py-1 text-white transition-colors hover:bg-red-600"
-          >
-            Remove
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const HomePage: React.FC = () => {
   const [auctionItems, setAuctionItems] = useState<DeviceGroup[]>();
 
