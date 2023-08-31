@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Web;
+using Microsoft.IdentityModel.Tokens;
 using Versteigerungs_App.Models;
 using Versteigerungs_App.Services;
 
@@ -31,10 +32,25 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", policyBuilder =>
         .AllowAnyHeader();
 }));
 
-builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(options =>
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        builder.Configuration.Bind("AzureAd", options);
+        var url = "https://sts.windows.net/393f7f62-ffae-4740-b443-bd04273d7320/";
+        options.RequireHttpsMetadata = false;
+        options.Authority = url;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidIssuer = url,
+            ValidTypes = new[] { "JWT" }
+        };
+
+        options.SecurityTokenValidators.Clear();
+        options.SecurityTokenValidators.Add(new JwtSecurityTokenHandler
+        {
+            MapInboundClaims = false
+        });
     });
 
 var app = builder.Build();
