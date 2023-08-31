@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Versteigerungs_App.Models;
 using Versteigerungs_App.Services;
 using Versteigerungs_App.Utils;
@@ -9,6 +8,7 @@ namespace Versteigerungs_App.Controllers
 {
     [Route("api/auction")]
     [ApiController]
+    [Authorize]
     public class AuctionController : ControllerBase
     {
         private readonly IAuctionService _auctionService;
