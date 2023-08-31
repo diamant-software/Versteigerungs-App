@@ -14,6 +14,6 @@ public static class UserExtensions
 
     public static bool IsAdmin(this User user)
     {
-        return Admins.Any(a => a == user.Username);
+        return Admins.Any(a => a.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
     }
 }
