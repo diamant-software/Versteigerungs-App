@@ -11,13 +11,15 @@ public class BiddingService : IBiddingService
 {
     private readonly IDevicesRepository _deviceGroupDevicesRepository;
     private readonly IBiddingRepository _biddingRepository;
+    private readonly IAuctionRepository _auctionRepository;
     private readonly ILogger<BiddingService> _logger;
 
-    public BiddingService(IDevicesRepository deviceGroupDevicesRepository, ILogger<BiddingService> logger, IBiddingRepository biddingRepository)
+    public BiddingService(IDevicesRepository deviceGroupDevicesRepository, ILogger<BiddingService> logger, IBiddingRepository biddingRepository, IAuctionRepository auctionRepository)
     {
         _deviceGroupDevicesRepository = deviceGroupDevicesRepository;
         _logger = logger;
         _biddingRepository = biddingRepository;
+        _auctionRepository = auctionRepository;
     }
 
     public async Task<bool> PlaceBid(Guid deviceId, Bid bid, User user)
@@ -25,6 +27,11 @@ public class BiddingService : IBiddingService
         try
         {
             if (! await UserCanPlaceBid(user, deviceId))
+            {
+                return false;
+            }
+
+            if (!await WithInAuctionTime())
             {
                 return false;
             }
@@ -60,6 +67,16 @@ public class BiddingService : IBiddingService
             _logger.LogError(e, "Error while placing bid");
             return false;
         }
+    }
+
+    private async Task<bool> WithInAuctionTime()
+    {
+        var times = await _auctionRepository.GetAuctionTimes();
+        if (times == null)
+        {
+            return false;
+        }
+        return DateTime.Now > times.StartTime && DateTime.Now < times.EndTime;
     }
 
     private async Task<bool> UserCanPlaceBid(User user, Guid deviceId)

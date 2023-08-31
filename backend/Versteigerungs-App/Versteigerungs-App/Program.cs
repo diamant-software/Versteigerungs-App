@@ -8,13 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<DatabaseSettings>("devices",builder.Configuration.GetSection("MongoDBSettingsDevices"));
 builder.Services.Configure<DatabaseSettings>("bids",builder.Configuration.GetSection("MongoDBSettingsBids"));
+builder.Services.Configure<DatabaseSettings>("auction",builder.Configuration.GetSection("MongoDBSettingsAuction"));
 
 builder.Services.AddSingleton<IDatabaseSettings>(serviceProvider => serviceProvider.GetRequiredService<IOptions<DatabaseSettings>>().Value);
 builder.Services.AddSingleton<IMongoDbCollectionFactory<PersistedBid>, MongoDbCollectionFactory<PersistedBid>>();
 builder.Services.AddSingleton<IMongoDbCollectionFactory<DeviceGroup>, MongoDbCollectionFactory<DeviceGroup>>();
+builder.Services.AddSingleton<IMongoDbCollectionFactory<Auction>, MongoDbCollectionFactory<Auction>>();
 builder.Services.AddSingleton<IDevicesRepository, MongoDevicesRepository>();
 builder.Services.AddSingleton<IBiddingRepository, BiddingRepository>();
+builder.Services.AddSingleton<IAuctionRepository, AuctionRepository>();
 builder.Services.AddSingleton<IBiddingService, BiddingService>();
+builder.Services.AddSingleton<IAuctionService, AuctionService>();
 builder.Services.AddControllers();
 
 builder.Services.AddCors(p => p.AddPolicy("corsapp", policyBuilder =>
