@@ -4,19 +4,21 @@ import { LoginButton } from '@/components/login-button';
 import { LogoutButton } from '@/components/logout-button';
 import api from '@/components/api';
 import { DeviceGroup } from '@/models/device-group';
-import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react';
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from '@azure/msal-react';
 import React, { useEffect, useState } from 'react';
 
 const HomePage: React.FC = () => {
   const [auctionItems, setAuctionItems] = useState<DeviceGroup[]>();
-
   const [filterGroup, setFilterGroup] = useState<string>('');
+  const isAuthenticated = useIsAuthenticated();
 
   useEffect(() => {
-    api.get<DeviceGroup[]>(`device-groups`).then((data) => {
-      setAuctionItems(data.data);
-    });
-  }, []);
+    if (isAuthenticated) {
+      api.get<DeviceGroup[]>(`device-groups`).then((data) => {
+        setAuctionItems(data.data);
+      });
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="container mx-auto p-4">
