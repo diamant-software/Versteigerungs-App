@@ -9,6 +9,10 @@
         "path": "../backend/Versteigerungs-App/Versteigerungs-App"
       },
       {
+        "name": "GitHub Actions",
+        "path": "../.github"
+      },
+      {
         "name": "ROOT",
         "path": ".."
       }
