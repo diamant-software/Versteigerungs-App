@@ -36,6 +36,16 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.Events = new JwtBearerEvents()
+        {
+            OnAuthenticationFailed = c =>
+            {
+                Console.WriteLine();
+                return null!;
+            }
+
+        };
+
         var url = "https://sts.windows.net/393f7f62-ffae-4740-b443-bd04273d7320/";
         options.RequireHttpsMetadata = false;
         options.Authority = url;
