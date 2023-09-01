@@ -64,7 +64,7 @@ const HomePage: React.FC = () => {
       </AuthenticatedTemplate>
 
       <UnauthenticatedTemplate>
-        <p>Please sign-in to see your profile information.</p>
+        <p>Bitte loggen sie sich ein.</p>
         <LoginButton />
       </UnauthenticatedTemplate>
     </div>
