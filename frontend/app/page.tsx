@@ -4,8 +4,22 @@ import { LoginButton } from '@/components/login-button';
 import { LogoutButton } from '@/components/logout-button';
 import api from '@/components/api';
 import { DeviceGroup } from '@/models/device-group';
-import { AuthenticatedTemplate, UnauthenticatedTemplate, useIsAuthenticated, useMsal } from '@azure/msal-react';
+import {
+  AuthenticatedTemplate,
+  UnauthenticatedTemplate,
+  useIsAuthenticated,
+  useMsal
+} from '@azure/msal-react';
 import React, { useEffect, useState } from 'react';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+
+const appInsights = new ApplicationInsights({
+  config: {
+    connectionString: 'InstrumentationKey=ff565f6f-566f-42c5-a8d0-3dbfac9a0f07;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/'
+  }
+});
+appInsights.loadAppInsights();
+appInsights.trackPageView();
 
 const HomePage: React.FC = () => {
   const [auctionItems, setAuctionItems] = useState<DeviceGroup[]>();
