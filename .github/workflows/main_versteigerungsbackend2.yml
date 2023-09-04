@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+    paths: 
+      - 'backend/**'
   workflow_dispatch:
 
 jobs:
@@ -15,12 +17,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: ./backend/Versteigerungs-App/Versteigerungs-App
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v1        
         with:
           dotnet-version: '7.x'
-          include-prerelease: true
+          include-prerelease: true          
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
