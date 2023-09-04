@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Versteigerungs-App", "Versteigerungs-App\Versteigerungs-App.csproj", "{2A70386B-8393-4D6E-B463-2B978E6C1631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersteigerungsFunction", "VersteigerungsFunction\VersteigerungsFunction.csproj", "{C81E139A-7DD7-4D19-B5E5-9BB51B57F3BA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
