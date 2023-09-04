@@ -11,14 +11,15 @@ on:
       - 'backend/**'
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_NAME: backend/Versteigerungs-App/Versteigerungs-App    # set this to your application's n
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: ./backend/Versteigerungs-App/Versteigerungs-App
+      - uses: actions/checkout@v2        
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1        
