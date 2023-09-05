@@ -1,7 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Identity.Web;
 using Versteigerungs_App.Models;
 using Versteigerungs_App.Services;
 
@@ -32,36 +31,15 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", policyBuilder =>
         .AllowAnyHeader();
 }));
 
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(options =>
     {
-        options.Events = new JwtBearerEvents()
-        {
-            OnAuthenticationFailed = c =>
-            {
-                Console.WriteLine();
-                return null!;
-            }
+        builder.Configuration.Bind("AzureAdB2C", options);
 
-        };
+        options.TokenValidationParameters.NameClaimType = "name";
+    }, 
+        options => { builder.Configuration.Bind("AzureAd", options); });
 
-        var url = "https://sts.windows.net/393f7f62-ffae-4740-b443-bd04273d7320/";
-        options.RequireHttpsMetadata = false;
-        options.Authority = url;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateAudience = false,
-            ValidIssuer = url,
-            ValidTypes = new[] { "JWT" }
-        };
-
-        options.SecurityTokenValidators.Clear();
-        options.SecurityTokenValidators.Add(new JwtSecurityTokenHandler
-        {
-            MapInboundClaims = false
-        });
-    });
 
 var app = builder.Build();
 

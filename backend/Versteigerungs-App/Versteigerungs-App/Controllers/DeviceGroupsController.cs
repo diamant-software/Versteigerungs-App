@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using Versteigerungs_App.Models;
 using Versteigerungs_App.Services;
 using Versteigerungs_App.Utils;
@@ -9,6 +10,7 @@ namespace DeviceAuctionAPI.Controllers;
 [Route("api/device-groups")]
 [ApiController]
 [Authorize]
+[RequiredScope("unrestricted")]
 public class DeviceGroupsController : ControllerBase
 {
     private readonly IDevicesRepository _devicesRepository;
