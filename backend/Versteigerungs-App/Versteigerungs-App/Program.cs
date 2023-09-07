@@ -37,6 +37,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         builder.Configuration.Bind("AzureAd", options);
 
         options.TokenValidationParameters.NameClaimType = "name";
+        options.TokenValidationParameters.ValidateAudience = false;
     }, 
         options => { builder.Configuration.Bind("AzureAd", options); });
 
@@ -50,7 +51,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 app.UseCors("corsapp");
 app.MapControllers();
 app.UseAuthentication();
-app.UseAuthorization();
+    app.UseAuthorization();
 
 
 app.Run();
