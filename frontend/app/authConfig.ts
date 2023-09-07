@@ -4,6 +4,28 @@
  */
 
 import { Configuration, LogLevel } from '@azure/msal-browser';
+const tenantName = "versteigerungen";
+
+const b2cPolicies = {
+  names: {
+      signUpSignIn: "B2C_1_flow1",
+      forgotPassword: "B2C_1_flow3",
+      editProfile: "B2C_1_flow2"
+  },
+  authorities: {
+      signUpSignIn: {
+          authority: 'https://versteigerungen.b2clogin.com/versteigerungen.onmicrosoft.com/B2C_1_flow1',
+          
+      },
+      forgotPassword: {
+          authority: `https://versteigerungen.b2clogin.com/versteigerungen.onmicrosoft.com/B2C_1_flow3`,
+      },
+      editProfile: {
+          authority: `https://versteigerungen.b2clogin.com/versteigerungen.onmicrosoft.com/B2C_1_flow2`
+      }
+  },
+  authorityDomain: `${tenantName}.b2clogin.com`
+}
 
 /**
  * Configuration object to be passed to MSAL instance on creation.
@@ -13,8 +35,10 @@ import { Configuration, LogLevel } from '@azure/msal-browser';
 export const msalConfig: Configuration = {
   auth: {
     clientId: 'a4ace1db-c3e2-4a5f-9c87-d22e57abf21c',
-    authority: 'https://login.microsoftonline.com/393f7f62-ffae-4740-b443-bd04273d7320',
-    redirectUri: 'http://localhost:3000/',
+    authority: b2cPolicies.authorities.signUpSignIn.authority,
+    redirectUri: '/',
+    knownAuthorities: [b2cPolicies.authorityDomain], 
+    navigateToLoginRequestUrl: false,
     postLogoutRedirectUri: "/"
   },
   cache: {
@@ -54,7 +78,7 @@ export const msalConfig: Configuration = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-  scopes: ['openid', 'User.Read', 'unrestricted']
+  scopes: ['https://versteigerungen.onmicrosoft.com/Versteigerungs-App/unrestricted']
 };
 
 /**
@@ -64,3 +88,5 @@ export const loginRequest = {
 export const graphConfig = {
   graphMeEndpoint: 'https://graph.microsoft.com/v1.0/me'
 };
+
+
