@@ -10,7 +10,6 @@ namespace Versteigerungs_App.Controllers
     [Route("api/auction")]
     [ApiController]
     [Authorize]
-    [RequiredScope("unrestricted")]
     public class AuctionController : ControllerBase
     {
         private readonly IAuctionService _auctionService;

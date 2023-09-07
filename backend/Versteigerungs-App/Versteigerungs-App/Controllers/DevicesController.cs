@@ -10,7 +10,6 @@ namespace Versteigerungs_App.Controllers
     [Route("api/device-groups/{groupId}/devices")]
     [ApiController]
     [Authorize]
-    [RequiredScope("unrestricted")]
     public class DevicesController : ControllerBase
     {
         private readonly IDeviceService _deviceService;

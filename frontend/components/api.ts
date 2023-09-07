@@ -17,7 +17,7 @@ instance.interceptors.request.use(async (config) => {
     });
 
     if (accessTokenResponse) {
-      const accessToken = accessTokenResponse.accessToken;
+      const accessToken = accessTokenResponse.idToken;
       if (config.headers && accessToken) {
         config.headers['Authorization'] = 'Bearer ' + accessToken;
       }

@@ -10,7 +10,6 @@ namespace DeviceAuctionAPI.Controllers;
 [Route("api/device-groups")]
 [ApiController]
 [Authorize]
-[RequiredScope("unrestricted")]
 public class DeviceGroupsController : ControllerBase
 {
     private readonly IDevicesRepository _devicesRepository;
